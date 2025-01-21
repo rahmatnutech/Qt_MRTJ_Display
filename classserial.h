@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QWidget>
-#include <mainwindow.h>
 
 //add library serial port
 #include<QtSerialPort/QSerialPort>
@@ -51,7 +50,7 @@ public :
     bool stop;
 
 signals:
-    void ReceiveDataProcess(MainWindow::DisplayStatus);
+    void ReceiveDataProcess(qint32);
 
 public slots:
 

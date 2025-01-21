@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSettings>
 #include <QDateTime>
+#include <QMovie>
 
 //panggil header serial
 #include "classserial.h"
@@ -33,6 +34,7 @@ public:
         QString imagePath;
         QString imageInName;
         QString imageOutName;
+        QString imageIdleName;
 
         QString soundPath;
         QString soundInName;
@@ -53,9 +55,10 @@ private:
 
     void GetConfig();
     void CheckSerial();
+    void InitUI();
 
 public slots:
-    void ReceiveDataOutput(DisplayStatus);
+    void ReceiveDataOutput(qint32);
     void IntervalToStandby();
 
 private slots:

@@ -66,7 +66,7 @@ ReceiveThread::ReceiveThread(QObject *parent) : QThread((parent))
 
 void ReceiveThread::run()
 {
-    MainWindow::DisplayStatus statusTrigger = MainWindow::Standby;
+    qint32 statusTrigger = 0;
     while(ClassSerial::Serial->isOpen())
     {
         if(ClassSerial::receivedData.length() >= 8)
@@ -82,13 +82,13 @@ void ReceiveThread::run()
                    static_cast<quint8>(ClassSerial::receivedData[6]) == ClassSerial::inData[1] &&
                    static_cast<quint8>(ClassSerial::receivedData[7]) == ClassSerial::inData[2])
                 {
-                    statusTrigger = MainWindow::In;
+                    statusTrigger = 1;
                 }
                 else if (static_cast<quint8>(ClassSerial::receivedData[5]) == ClassSerial::outData[0] &&
                          static_cast<quint8>(ClassSerial::receivedData[6]) == ClassSerial::outData[1] &&
                          static_cast<quint8>(ClassSerial::receivedData[7]) == ClassSerial::outData[2])
                 {
-                    statusTrigger = MainWindow::Out;
+                    statusTrigger = 2;
                 }
 
                 ClassSerial::receivedData.clear();

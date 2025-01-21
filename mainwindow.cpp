@@ -17,9 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     GetConfig();
+    InitUI();
+
 
     Thread = new ReceiveThread(this);
     connect(Thread, SIGNAL(ReceiveDataProcess(qint32)),
@@ -43,6 +44,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::InitUI()
+{
+    QMovie *img_idle = new QMovie(config.imagePath+config.imageIdleName);
+    QMovie *img_success_in = new QMovie(config.imagePath+config.imageInName);
+    QMovie *img_success_out = new QMovie(config.imagePath+config.imageOutName);
+
+    ui->image_idle->setMovie(img_idle);
+    ui->image_success_in->setMovie(img_success_in);
+    ui->image_success_out->setMovie(img_success_out);
+
+    img_idle->start();
+    img_success_in->start();
+    img_success_out->start();
+
+    ui->image_idle->setAttribute(Qt::WA_TranslucentBackground, true);
+    ui->image_success_in->setAttribute(Qt::WA_TranslucentBackground, true);
+    ui->image_success_out->setAttribute(Qt::WA_TranslucentBackground, true);
+
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground,true);
+    this->setStyleSheet("background:rgb(255,255,255);");
+}
+
 
 void MainWindow::CheckSerial()
 {
@@ -57,9 +81,10 @@ void MainWindow::CheckSerial()
     }
 }
 
-void MainWindow::ReceiveDataOutput(MainWindow::DisplayStatus StatusTrigger)
+void MainWindow::ReceiveDataOutput(qint32 StatusTrigger)
 {
-    SetLCDStatus(StatusTrigger);
+    DisplayStatus sts = static_cast<DisplayStatus>(StatusTrigger);
+    SetLCDStatus(sts);
 }
 
 void MainWindow::SetLCDStatus(MainWindow::DisplayStatus StatusTrigger)
@@ -121,6 +146,7 @@ void MainWindow::GetConfig()
 
     //Image & Gif
     config.imagePath = settings.value("Image/ImagePath", "").toString();
+    config.imageIdleName = settings.value("Image/IdleImageName", "").toString();
     config.imageInName = settings.value("Image/InImageName", "").toString();
     config.imageOutName = settings.value("Image/OutImageName", "").toString();
 
