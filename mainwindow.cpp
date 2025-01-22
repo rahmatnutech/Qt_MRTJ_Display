@@ -65,6 +65,9 @@ void MainWindow::InitUI()
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground,true);
     this->setStyleSheet("background:rgb(255,255,255);");
+
+    connect(ui->pb_gatein, &QPushButton::clicked, this, &MainWindow::onButtonEntryClicked);
+    connect(ui->pb_gateout, &QPushButton::clicked, this, &MainWindow::onButtonExitClicked);
 }
 
 
@@ -95,6 +98,8 @@ void MainWindow::SetLCDStatus(MainWindow::DisplayStatus StatusTrigger)
         ui->image_success_in->show();
         ui->image_success_out->hide();
 
+        LibUtility.PlayMusicFile(config.soundPath+config.soundInName);
+
         targetTimeStandby = QDateTime::currentDateTime().addMSecs(config.intervalToStandby);
         if(!tmrIntervalStandby->isActive()){
             tmrIntervalStandby->start(tmrInterval);
@@ -102,8 +107,10 @@ void MainWindow::SetLCDStatus(MainWindow::DisplayStatus StatusTrigger)
         break;
     case Out:
         ui->image_idle->hide();
-        ui->image_success_in->show();
-        ui->image_success_out->hide();
+        ui->image_success_in->hide();
+        ui->image_success_out->show();
+
+        LibUtility.PlayMusicFile(config.soundPath+config.soundOutName);
 
         targetTimeStandby = QDateTime::currentDateTime().addMSecs(config.intervalToStandby);
         if(!tmrIntervalStandby->isActive()){
@@ -123,12 +130,13 @@ void MainWindow::IntervalToStandby()
 {
     if(QDateTime::currentDateTime()> targetTimeStandby)
     {
-        SetLCDStatus(Standby);
+        SetLCDStatus(Standby);        
+
+        if(tmrIntervalStandby->isActive()){
+            tmrIntervalStandby->stop();
+        }
     }
 
-    if(tmrIntervalStandby->isActive()){
-        tmrIntervalStandby->stop();
-    }
 }
 
 //Function Get Config from .ini file
@@ -153,4 +161,15 @@ void MainWindow::GetConfig()
     config.soundPath = settings.value("Sound/SoundPath", "").toString();
     config.soundInName = settings.value("Sound/InSoundName", "").toString();
     config.soundOutName = settings.value("Sound/OutSoundName", "").toString();
+}
+
+
+void MainWindow::onButtonEntryClicked()
+{
+    SetLCDStatus(DisplayStatus::In);
+}
+
+void MainWindow::onButtonExitClicked()
+{
+    SetLCDStatus(DisplayStatus::Out);
 }

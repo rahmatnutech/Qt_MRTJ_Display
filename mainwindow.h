@@ -63,6 +63,8 @@ public slots:
 
 private slots:
     void SetLCDStatus(DisplayStatus);
+    void onButtonEntryClicked();
+    void onButtonExitClicked();
 
 };
 #endif // MAINWINDOW_H

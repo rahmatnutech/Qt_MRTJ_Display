@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -24,6 +25,8 @@ public:
     QLabel *image_idle;
     QLabel *image_success_in;
     QLabel *image_success_out;
+    QPushButton *pb_gatein;
+    QPushButton *pb_gateout;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -44,6 +47,12 @@ public:
         image_success_out->setObjectName(QString::fromUtf8("image_success_out"));
         image_success_out->setGeometry(QRect(0, 0, 480, 800));
         image_success_out->setAlignment(Qt::AlignCenter);
+        pb_gatein = new QPushButton(centralwidget);
+        pb_gatein->setObjectName(QString::fromUtf8("pb_gatein"));
+        pb_gatein->setGeometry(QRect(10, 740, 80, 21));
+        pb_gateout = new QPushButton(centralwidget);
+        pb_gateout->setObjectName(QString::fromUtf8("pb_gateout"));
+        pb_gateout->setGeometry(QRect(10, 770, 80, 21));
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);
@@ -57,6 +66,8 @@ public:
         image_idle->setText(QString());
         image_success_in->setText(QString());
         image_success_out->setText(QString());
+        pb_gatein->setText(QCoreApplication::translate("MainWindow", "Gate In", nullptr));
+        pb_gateout->setText(QCoreApplication::translate("MainWindow", "Gate Out", nullptr));
     } // retranslateUi
 
 };
